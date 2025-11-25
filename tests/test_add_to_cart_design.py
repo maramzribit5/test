@@ -1,18 +1,24 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 
 def test_add_to_cart_design():
-    driver = webdriver.Chrome()
+    # Initialisation du navigateur avec webdriver-manager
+    options = Options()
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
     driver.maximize_window()
     driver.get("https://www.saucedemo.com/")
 
-    # LOGIN visual_user
+    # Login visual_user
     driver.find_element(By.ID, "user-name").send_keys("visual_user")
     driver.find_element(By.ID, "password").send_keys("secret_sauce")
     driver.find_element(By.ID, "login-button").click()
 
-    # Tous les boutons Add to cart
+    # Récupérer tous les boutons Add to cart
     buttons = driver.find_elements(By.CSS_SELECTOR, "button.btn_inventory")
 
     # ---- TC-ADD-01 : Alignement ----
@@ -41,3 +47,8 @@ def test_add_to_cart_design():
     assert original_color != hover_color, "❌ FAIL - Hover non fonctionnel"
 
     driver.quit()
+
+# Lancer le test automatiquement quand on exécute le fichier
+if __name__ == "__main__":
+    test_add_to_cart_design()
+
